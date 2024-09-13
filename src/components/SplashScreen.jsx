@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Trophy, Frown, Meh, Smile, Crown } from 'lucide-react';
 
-const SplashScreen = ({ score, resetGame, maxPossibleGold }) => {
+const SplashScreen = ({ score, maxPossibleGold }) => {
   const [countdown, setCountdown] = useState(5);
 
   useEffect(() => {
@@ -9,13 +9,14 @@ const SplashScreen = ({ score, resetGame, maxPossibleGold }) => {
       setCountdown((prevCount) => {
         if (prevCount === 1) {
           clearInterval(timer);
-          resetGame();
+          window.location.reload();
+          
         }
         return prevCount - 1;
       });
     }, 1000);
     return () => clearInterval(timer);
-  }, [resetGame]);
+  }, []);
 
   const getEmoji = (score, maxPossibleGold) => {
     const ratio = score / maxPossibleGold;

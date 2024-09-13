@@ -9,7 +9,6 @@ const App = () => {
         <div>
             <Game />
             <ToastContainer />
-
         </div>
     );
 };

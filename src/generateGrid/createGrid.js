@@ -2,40 +2,42 @@ import fs from "fs";
 import { gridData } from "./gridData.js";
 
 function findMaxGold(i, j, grid, visited) {
-  const n = 8,
-    m = 8;
-  if (
-    i < 0 ||
-    j < 0 ||
-    i >= n ||
-    j >= m ||
-    visited[i][j] ||
-    grid[i][j] === -1
-  ) {
-    return -1e7;
+  const n = 8, m = 8;
+  
+  if (i < 0 || j < 0 || i >= n || j >= m || visited[i][j] || grid[i][j] === -1) {
+    return Number.MIN_SAFE_INTEGER;
   }
+
   if (i === n - 1 && j === m - 1) {
     return grid[i][j];
   }
+
   visited[i][j] = 1;
+
   const up = grid[i][j] + findMaxGold(i - 1, j, grid, visited);
   const down = grid[i][j] + findMaxGold(i + 1, j, grid, visited);
   const left = grid[i][j] + findMaxGold(i, j - 1, grid, visited);
   const right = grid[i][j] + findMaxGold(i, j + 1, grid, visited);
+
   visited[i][j] = 0;
+
   return Math.max(up, down, left, right);
 }
 
 function maxGold(gold, obstacles) {
-  const grid = Array(8)
-    .fill()
-    .map(() => Array(8).fill(0));
+  const grid = Array(8).fill().map(() => Array(8).fill(0));
   gold.forEach(([x, y]) => (grid[x][y] = 1));
   obstacles.forEach(([x, y]) => (grid[x][y] = -1));
-  const visited = Array(8)
-    .fill()
-    .map(() => Array(8).fill(0));
-  return findMaxGold(0, 0, grid, visited);
+
+  const visited = Array(8).fill().map(() => Array(8).fill(0));
+
+  if (grid[0][0] === -1 || grid[7][7] === -1) {
+    return 0;
+  }
+
+  const result = findMaxGold(0, 0, grid, visited);
+  
+  return result === Number.MIN_SAFE_INTEGER ? 0 : result;
 }
 
 function generateCoordinates(count, occupied) {
